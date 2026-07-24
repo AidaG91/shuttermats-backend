@@ -8,6 +8,7 @@ public class ShuttermatsBackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ShuttermatsBackendApplication.class, args);
+		System.out.println("ShutterMats Backend Application has been started <3");
 	}
 
 }
