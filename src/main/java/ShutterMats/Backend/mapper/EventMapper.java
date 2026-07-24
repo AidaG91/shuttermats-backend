@@ -3,7 +3,9 @@ package ShutterMats.Backend.mapper;
 import ShutterMats.Backend.dto.request.EventRequestDTO;
 import ShutterMats.Backend.dto.response.EventResponseDTO;
 import ShutterMats.Backend.entity.Event;
+import org.springframework.stereotype.Component;
 
+@Component
 public class EventMapper {
 
     public EventResponseDTO toResponseDTO (Event event){
