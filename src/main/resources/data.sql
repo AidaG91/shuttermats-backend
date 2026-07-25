@@ -1,21 +1,38 @@
+-- Seed de eventos reales de la escena de grappling/BJJ en Catalunya.
+-- Las imagenes son locales: coloca los archivos en
+-- shuttermats-frontend/public/images/events/<nombre-de-archivo>
 INSERT INTO events (name, date, location, image_url, description, created_at, updated_at) VALUES
-                                                                                              ('IBJJF Madrid International Open', '2024-03-10', 'Madrid', 'https://picsum.photos/600/400?random=101',
-                                                                                               'One of the biggest IBJJF tournaments in Spain, featuring top competitors from Europe.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                              ('ADCC Spanish Nationals', '2024-04-22', 'Barcelona', 'https://picsum.photos/600/400?random=102',
-                                                                                               'National-level ADCC event with elite grapplers and high-intensity matches.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                              ('BJJ Summer Camp Bilbao', '2024-07-15', 'Bilbao', 'https://picsum.photos/600/400?random=103',
-                                                                                               'Outdoor summer camp with seminars, sparring sessions, and photography coverage.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                              ('Valencia Judo Nationals', '2024-05-05', 'Valencia', 'https://picsum.photos/600/400?random=104',
-                                                                                               'Annual national judo competition with athletes from all regions of Spain.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                              ('Grappling Barcelona Cup', '2024-06-20', 'Barcelona', 'https://picsum.photos/600/400?random=105',
-                                                                                               'Major grappling event with top-level competitors and exciting finals.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                              ('BJJ Open Zaragoza', '2024-09-12', 'Zaragoza', 'https://picsum.photos/600/400?random=106',
-                                                                                               'Regional BJJ open tournament with multiple divisions and categories.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                              ('Judo Euskadi Regional Championship', '2024-10-03', 'Vitoria-Gasteiz', 'https://picsum.photos/600/400?random=107',
-                                                                                               'Regional judo championship featuring clubs from all over the Basque Country.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                              ('No-Gi Challenge Sevilla', '2024-11-18', 'Sevilla', 'https://picsum.photos/600/400?random=108',
-                                                                                               'Fast-paced no-gi grappling event with explosive matches and great atmosphere.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                              ('BJJ Kids Cup Barcelona', '2024-12-02', 'Barcelona', 'https://picsum.photos/600/400?random=109',
-                                                                                               'Youth-focused BJJ tournament promoting sportsmanship and development.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-                                                                                              ('Winter Grappling Open Madrid', '2025-01-14', 'Madrid', 'https://picsum.photos/600/400?random=110',
-                                                                                               'Winter edition of the popular grappling open, attracting athletes from all over Spain.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+    ('Torredembarra Challenge Summer 2025', '2025-06-21', 'Torredembarra, Tarragona',
+     '/images/events/torredembarra-challenge-summer-2025.jpg',
+     'Torneo de grappling gi y no-gi en Torredembarra, con divisiones para todos los niveles y un ambiente muy familiar en la costa de Tarragona.',
+     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+    ('Vinyols Challenge Fall 2025', '2025-11-08', 'Vinyols i els Arcs, Tarragona',
+     '/images/events/vinyols-challenge-fall-2025.jpg',
+     'Edicion de otono del Vinyols Challenge, uno de los torneos de referencia en el Camp de Tarragona, con categorias desde infantil hasta absoluto.',
+     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+    ('IBJJF Master European Championship 2026', '2026-04-25', 'Barcelona',
+     '/images/events/ibjjf-master-european-2026.jpg',
+     'Campeonato Europeo Master de la IBJJF celebrado en el Centre Esportiu Municipal Olimpics de la Vall d''Hebron, con competidores de toda Europa.',
+     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+    ('Vinyols Challenge Spring 2026', '2026-05-02', 'Vinyols i els Arcs, Tarragona',
+     '/images/events/vinyols-challenge-spring-2026.jpg',
+     'Edicion de primavera del Vinyols Challenge, con formato gi y no-gi y divisiones desde los 4 anos hasta veteranos.',
+     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+    ('Polaris Barcelona', '2026-08-22', 'Barcelona',
+     '/images/events/polaris-barcelona-2026.jpg',
+     'Polaris Pro Grappling llega a Barcelona con superfights de nivel profesional y algunos de los mejores grapplers de Europa sobre el tatami.',
+     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+    ('Penedes Challenge', '2026-09-13', 'Vilafranca del Penedes, Barcelona',
+     '/images/events/penedes-challenge-2026.jpg',
+     'Torneo de grappling del Penedes, con divisiones gi y no-gi para todas las edades y niveles en un entorno cercano y competitivo.',
+     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+    ('Torredembarra Challenge Fall 2026', '2026-11-14', 'Torredembarra, Tarragona',
+     '/images/events/torredembarra-challenge-fall-2026.jpg',
+     'Nueva edicion del Torredembarra Challenge, cerrando el ano de competicion en la costa de Tarragona con gi y no-gi.',
+     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
