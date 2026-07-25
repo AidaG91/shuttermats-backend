@@ -28,7 +28,12 @@ public class EventControllerIntegrationTest {
     void setup() {
         eventRepository.deleteAll();
 
-        Event event = new Event(null, "Open BJJ", LocalDate.now(), "Madrid", null, "Desc");
+        Event event = Event.builder()
+                .name("Open BJJ")
+                .date(LocalDate.now())
+                .location("Madrid")
+                .description("Desc")
+                .build();
 
         eventRepository.save(event);
     }

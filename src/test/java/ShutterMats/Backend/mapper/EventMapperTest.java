@@ -15,7 +15,12 @@ public class EventMapperTest {
 
     @Test
     void toResponseDTO_mapsCorrectly() {
-        Event event = new Event(1L, "Open BJJ", LocalDate.now(), "Madrid", null, null);
+        Event event = Event.builder()
+                .id(1L)
+                .name("Open BJJ")
+                .date(LocalDate.now())
+                .location("Madrid")
+                .build();
 
         EventResponseDTO dto = mapper.toResponseDTO(event);
 

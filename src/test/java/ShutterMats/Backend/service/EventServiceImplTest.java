@@ -31,7 +31,12 @@ public class EventServiceImplTest {
 
     @Test
     void findAll_returnListOfEventResponseDTO() {
-        Event event = new Event(1L, "Open BJJ", LocalDate.now(), "Madrid", null, null);
+        Event event = Event.builder()
+                .id(1L)
+                .name("Open BJJ")
+                .date(LocalDate.now())
+                .location("Madrid")
+                .build();
         EventResponseDTO dto = new EventResponseDTO(1L, "Open BJJ", LocalDate.now(), "Madrid", null, null);
 
         when(eventRepository.findAll()).thenReturn(List.of(event));
