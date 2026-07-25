@@ -3,15 +3,19 @@ package ShutterMats.Backend.controller;
 import ShutterMats.Backend.dto.request.EventRequestDTO;
 import ShutterMats.Backend.dto.response.EventResponseDTO;
 import ShutterMats.Backend.service.EventService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
-@CrossOrigin(origins = "http://localhost:5173")
+@Validated
 public class EventController {
 
     private final EventService eventService;
@@ -35,22 +39,24 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public EventResponseDTO getEvent(@PathVariable Long id) {
+    public EventResponseDTO getEvent(@PathVariable @Positive Long id) {
         return eventService.findById(id);
     }
 
     @PostMapping
-    public EventResponseDTO createEvent(@RequestBody EventRequestDTO dto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventResponseDTO createEvent(@Valid @RequestBody EventRequestDTO dto) {
         return eventService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public EventResponseDTO updateEvent(@PathVariable Long id, @RequestBody EventRequestDTO dto) {
+    public EventResponseDTO updateEvent(@PathVariable @Positive Long id, @Valid @RequestBody EventRequestDTO dto) {
         return eventService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEvent(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteEvent(@PathVariable @Positive Long id) {
         eventService.delete(id);
     }
 }

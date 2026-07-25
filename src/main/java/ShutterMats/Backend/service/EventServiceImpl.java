@@ -3,6 +3,7 @@ package ShutterMats.Backend.service;
 import ShutterMats.Backend.dto.request.EventRequestDTO;
 import ShutterMats.Backend.dto.response.EventResponseDTO;
 import ShutterMats.Backend.entity.Event;
+import ShutterMats.Backend.exception.EventNotFoundException;
 import ShutterMats.Backend.mapper.EventMapper;
 import ShutterMats.Backend.repository.EventRepository;
 import ShutterMats.Backend.repository.specifications.EventSpecifications;
@@ -42,7 +43,7 @@ public class EventServiceImpl implements EventService{
 
     @Override
     public EventResponseDTO findById(Long id) {
-        Event event = eventRepository.findById(id).orElseThrow(() -> new RuntimeException("Event not found"));
+        Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
         return eventMapper.toResponseDTO(event);
     }
 
@@ -56,15 +57,19 @@ public class EventServiceImpl implements EventService{
     @Override
     public EventResponseDTO update(Long id, EventRequestDTO dto) {
         Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() -> new EventNotFoundException(id));
 
         eventMapper.updateEntity(event, dto);
 
         Event updated = eventRepository.save(event);
-        return eventMapper.toResponseDTO(updated);    }
+        return eventMapper.toResponseDTO(updated);
+    }
 
     @Override
     public void delete(Long id) {
+        if (!eventRepository.existsById(id)) {
+            throw new EventNotFoundException(id);
+        }
         eventRepository.deleteById(id);
     }
 }
