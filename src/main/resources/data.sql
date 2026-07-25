@@ -1,6 +1,10 @@
 -- Seed de eventos reales de la escena de grappling/BJJ en Catalunya.
--- Las imagenes son locales: coloca los archivos en
+-- Las imágenes son locales: coloca los archivos en
 -- shuttermats-frontend/public/images/events/<nombre-de-archivo>
+--
+-- ON CONFLICT evita duplicados: la tabla tiene una restricción UNIQUE
+-- sobre (name, date), así que reiniciar el backend no vuelve a insertar
+-- filas que ya existan.
 INSERT INTO events (name, date, location, image_url, description, created_at, updated_at) VALUES
     ('Torredembarra Challenge Summer 2025', '2025-06-21', 'Torredembarra, Tarragona',
      '/images/events/torredembarra-challenge-summer-2025.jpg',
@@ -9,17 +13,17 @@ INSERT INTO events (name, date, location, image_url, description, created_at, up
 
     ('Vinyols Challenge Fall 2025', '2025-11-08', 'Vinyols i els Arcs, Tarragona',
      '/images/events/vinyols-challenge-fall-2025.jpg',
-     'Edicion de otono del Vinyols Challenge, uno de los torneos de referencia en el Camp de Tarragona, con categorias desde infantil hasta absoluto.',
+     'Edición de otoño del Vinyols Challenge, uno de los torneos de referencia en el Camp de Tarragona, con categorías desde infantil hasta absoluto.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
     ('IBJJF Master European Championship 2026', '2026-04-25', 'Barcelona',
      '/images/events/ibjjf-master-european-2026.jpg',
-     'Campeonato Europeo Master de la IBJJF celebrado en el Centre Esportiu Municipal Olimpics de la Vall d''Hebron, con competidores de toda Europa.',
+     'Campeonato Europeo Máster de la IBJJF celebrado en el Centre Esportiu Municipal Olímpics de la Vall d''Hebron, con competidores de toda Europa.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
     ('Vinyols Challenge Spring 2026', '2026-05-02', 'Vinyols i els Arcs, Tarragona',
      '/images/events/vinyols-challenge-spring-2026.jpg',
-     'Edicion de primavera del Vinyols Challenge, con formato gi y no-gi y divisiones desde los 4 anos hasta veteranos.',
+     'Edición de primavera del Vinyols Challenge, con formato gi y no-gi y divisiones desde los 4 años hasta veteranos.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
     ('Polaris Barcelona', '2026-08-22', 'Barcelona',
@@ -27,12 +31,13 @@ INSERT INTO events (name, date, location, image_url, description, created_at, up
      'Polaris Pro Grappling llega a Barcelona con superfights de nivel profesional y algunos de los mejores grapplers de Europa sobre el tatami.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-    ('Penedes Challenge', '2026-09-13', 'Vilafranca del Penedes, Barcelona',
+    ('Penedès Challenge', '2026-09-13', 'Vilafranca del Penedès, Barcelona',
      '/images/events/penedes-challenge-2026.jpg',
-     'Torneo de grappling del Penedes, con divisiones gi y no-gi para todas las edades y niveles en un entorno cercano y competitivo.',
+     'Torneo de grappling del Penedès, con divisiones gi y no-gi para todas las edades y niveles en un entorno cercano y competitivo.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
     ('Torredembarra Challenge Fall 2026', '2026-11-14', 'Torredembarra, Tarragona',
      '/images/events/torredembarra-challenge-fall-2026.jpg',
-     'Nueva edicion del Torredembarra Challenge, cerrando el ano de competicion en la costa de Tarragona con gi y no-gi.',
-     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+     'Nueva edición del Torredembarra Challenge, cerrando el año de competición en la costa de Tarragona con gi y no-gi.',
+     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+ON CONFLICT (name, date) DO NOTHING;

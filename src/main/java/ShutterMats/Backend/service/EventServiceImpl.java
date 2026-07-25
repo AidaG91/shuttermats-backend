@@ -5,6 +5,10 @@ import ShutterMats.Backend.dto.response.EventResponseDTO;
 import ShutterMats.Backend.entity.Event;
 import ShutterMats.Backend.mapper.EventMapper;
 import ShutterMats.Backend.repository.EventRepository;
+import ShutterMats.Backend.repository.specifications.EventSpecifications;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +25,19 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public List<EventResponseDTO> findAll() {
-        return eventRepository.findAll()
-                .stream()
-                .map(eventMapper::toResponseDTO)
-                .toList();
+    public Page<EventResponseDTO> findAll(String status, String location, Pageable pageable) {
+        Specification<Event> spec = Specification.allOf(
+                EventSpecifications.hasStatus(status),
+                EventSpecifications.hasLocation(location)
+        );
+
+        return eventRepository.findAll(spec, pageable)
+                .map(eventMapper::toResponseDTO);
+    }
+
+    @Override
+    public List<String> findAllLocations() {
+        return eventRepository.findDistinctLocations();
     }
 
     @Override

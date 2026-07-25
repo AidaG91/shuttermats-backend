@@ -42,6 +42,6 @@ public class EventControllerIntegrationTest {
     void getEvents_returns200AndList() throws Exception {
         mockMvc.perform(get("/api/events"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Open BJJ"));
+                .andExpect(jsonPath("$.content[0].name").value("Open BJJ"));
     }
 }

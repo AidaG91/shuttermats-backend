@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "events", indexes = {
         @Index(name = "idx_events_date", columnList = "date")
+}, uniqueConstraints = {
+        @UniqueConstraint(name = "uk_events_name_date", columnNames = {"name", "date"})
 })
 @Getter
 @Setter
