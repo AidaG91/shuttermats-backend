@@ -3,7 +3,7 @@ package ShutterMats.Backend.integration;
 import ShutterMats.Backend.dto.request.EventRequestDTO;
 import ShutterMats.Backend.entity.Event;
 import ShutterMats.Backend.repository.EventRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

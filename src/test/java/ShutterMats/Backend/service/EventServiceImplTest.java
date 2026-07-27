@@ -93,7 +93,7 @@ public class EventServiceImplTest {
             eventService.findById(99L);
             assertTrue(false, "Expected RuntimeException was not thrown");
         } catch (RuntimeException ex) {
-            assertEquals("Event not found", ex.getMessage());
+            assertEquals("No se ha encontrado ningún evento con id 99", ex.getMessage());
         }
     }
 }
