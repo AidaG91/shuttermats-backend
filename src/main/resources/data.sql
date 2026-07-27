@@ -1,6 +1,4 @@
 -- Seed de eventos reales de la escena de grappling/BJJ en Catalunya.
--- Las imágenes son locales: coloca los archivos en
--- shuttermats-frontend/public/images/events/<nombre-de-archivo>
 --
 -- ON CONFLICT evita duplicados: la tabla tiene una restricción UNIQUE
 -- sobre (name, date), así que reiniciar el backend no vuelve a insertar
@@ -41,3 +39,11 @@ INSERT INTO events (name, date, location, image_url, description, created_at, up
      'Nueva edición del Torredembarra Challenge, cerrando el año de competición en la costa de Tarragona con gi y no-gi.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
 ON CONFLICT (name, date) DO NOTHING;
+
+-- Extras de cobertura de atleta (ver shuttermats_precios_cobertura_atleta.pdf V1.0).
+-- Precio base (primer combate 35€, combate extra +25€) se calcula más adelante,
+-- de momento solo se seedan los extras opcionales con precio fijo.
+INSERT INTO coverage_extra (name, price, active, created_at, updated_at) VALUES
+    ('Calentamiento', 15.00, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('Entrega rápida', 20.00, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+ON CONFLICT (name) DO NOTHING;

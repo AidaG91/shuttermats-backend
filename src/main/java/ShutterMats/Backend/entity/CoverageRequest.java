@@ -84,11 +84,6 @@ public class CoverageRequest {
 
     private Boolean competesInMultipleCategories;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "coverage_package_id", nullable = false)
-    private CoveragePackage coveragePackage;
-
     @ManyToMany
     @JoinTable(
             name = "coverage_request_extras",

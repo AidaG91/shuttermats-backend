@@ -14,7 +14,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "coverage_extra")
+@Table(name = "coverage_extra", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_coverage_extra_name", columnNames = "name")
+})
 @Getter
 @Setter
 @NoArgsConstructor
