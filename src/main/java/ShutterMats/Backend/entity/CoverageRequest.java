@@ -80,9 +80,10 @@ public class CoverageRequest {
 
     private String smoothcompDisplayName;
 
-    private String estimatedFirstFightTime;
+    @Column(length = 500)
+    private String smoothcompProfileLink;
 
-    private Boolean competesInMultipleCategories;
+    private String estimatedFirstFightTime;
 
     @ManyToMany
     @JoinTable(
