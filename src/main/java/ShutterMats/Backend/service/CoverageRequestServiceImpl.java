@@ -55,9 +55,10 @@ public class CoverageRequestServiceImpl implements CoverageRequestService {
     }
 
     @Override
-    public Page<CoverageRequestResponseDTO> findAll(String status, Pageable pageable) {
+    public Page<CoverageRequestResponseDTO> findAll(String status, Long eventId, Pageable pageable) {
         Specification<CoverageRequest> spec = Specification.allOf(
-                CoverageRequestSpecifications.hasStatus(status)
+                CoverageRequestSpecifications.hasStatus(status),
+                CoverageRequestSpecifications.hasEventId(eventId)
         );
 
         return coverageRequestRepository.findAll(spec, pageable)

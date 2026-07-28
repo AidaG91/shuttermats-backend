@@ -29,9 +29,10 @@ public class AdminRequestController {
     @GetMapping
     public Page<CoverageRequestResponseDTO> getRequests(
             @RequestParam(required = false) String status,
+            @RequestParam(required = false) Long eventId,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return coverageRequestService.findAll(status, pageable);
+        return coverageRequestService.findAll(status, eventId, pageable);
     }
 
     @GetMapping("/{id}")

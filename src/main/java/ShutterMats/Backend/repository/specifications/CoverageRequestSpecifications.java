@@ -23,4 +23,12 @@ public class CoverageRequestSpecifications {
 
         return (root, query, cb) -> cb.equal(root.get("status"), parsed);
     }
+
+    public static Specification<CoverageRequest> hasEventId(Long eventId) {
+        if (eventId == null) {
+            return (root, query, cb) -> cb.conjunction();
+        }
+
+        return (root, query, cb) -> cb.equal(root.get("event").get("id"), eventId);
+    }
 }

@@ -9,7 +9,7 @@ public interface CoverageRequestService {
 
     CoverageRequestResponseDTO create(CoverageRequestRequestDTO dto);
 
-    Page<CoverageRequestResponseDTO> findAll(String status, Pageable pageable);
+    Page<CoverageRequestResponseDTO> findAll(String status, Long eventId, Pageable pageable);
 
     CoverageRequestResponseDTO findById(Long id);
 }

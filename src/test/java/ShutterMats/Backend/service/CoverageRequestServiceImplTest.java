@@ -125,7 +125,32 @@ class CoverageRequestServiceImplTest {
         when(coverageRequestRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
         when(coverageRequestMapper.toResponseDTO(entity)).thenReturn(dto);
 
-        Page<CoverageRequestResponseDTO> result = coverageRequestService.findAll("PENDING", pageable);
+        Page<CoverageRequestResponseDTO> result = coverageRequestService.findAll("PENDING", null, pageable);
+
+        assertEquals(1, result.getTotalElements());
+        assertEquals(dto, result.getContent().get(0));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findAll_returnsMappedPage_whenFilteredByEventId() {
+        CoverageRequest entity = new CoverageRequest();
+        entity.setId(1L);
+        entity.setStatus(RequestStatus.PENDING);
+
+        CoverageRequestResponseDTO dto = new CoverageRequestResponseDTO(
+                1L, RequestStatus.PENDING, "Laia Puig", "laia@example.com",
+                null, Division.ADULT, CompetitionModality.BOTH, BeltCategory.BLUE, "Pluma",
+                List.of(), null
+        );
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<CoverageRequest> page = new PageImpl<>(List.of(entity), pageable, 1);
+
+        when(coverageRequestRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(page);
+        when(coverageRequestMapper.toResponseDTO(entity)).thenReturn(dto);
+
+        Page<CoverageRequestResponseDTO> result = coverageRequestService.findAll(null, 5L, pageable);
 
         assertEquals(1, result.getTotalElements());
         assertEquals(dto, result.getContent().get(0));

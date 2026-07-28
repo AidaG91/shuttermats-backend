@@ -50,12 +50,14 @@ class AdminRequestsIntegrationTest {
     @Value("${app.admin.username}")
     private String adminUsername;
 
+    private Event seededEvent;
+
     @BeforeEach
     void setup() {
         coverageRequestRepository.deleteAll();
         eventRepository.deleteAll();
 
-        Event event = eventRepository.save(Event.builder()
+        seededEvent = eventRepository.save(Event.builder()
                 .name("Open BJJ")
                 .date(LocalDate.now())
                 .location("Madrid")
@@ -65,7 +67,7 @@ class AdminRequestsIntegrationTest {
         request.setAthleteName("Laia Puig");
         request.setAthleteEmail("laia@example.com");
         request.setAthletePhone("600111222");
-        request.setEvent(event);
+        request.setEvent(seededEvent);
         request.setDivision(Division.ADULT);
         request.setModality(CompetitionModality.BOTH);
         request.setTermsAccepted(true);
@@ -75,6 +77,25 @@ class AdminRequestsIntegrationTest {
 
     private CoverageRequest firstSavedRequest() {
         return coverageRequestRepository.findAll().get(0);
+    }
+
+    private CoverageRequest saveRequestForNewEvent(String athleteName, String eventName) {
+        Event event = eventRepository.save(Event.builder()
+                .name(eventName)
+                .date(LocalDate.now().plusDays(30))
+                .location("Sabadell")
+                .build());
+
+        CoverageRequest request = new CoverageRequest();
+        request.setAthleteName(athleteName);
+        request.setAthleteEmail("marc@example.com");
+        request.setAthletePhone("600333444");
+        request.setEvent(event);
+        request.setDivision(Division.ADULT);
+        request.setModality(CompetitionModality.BOTH);
+        request.setTermsAccepted(true);
+        request.setStatus(RequestStatus.PENDING);
+        return coverageRequestRepository.save(request);
     }
 
     private String obtainAdminToken() throws Exception {
@@ -123,6 +144,30 @@ class AdminRequestsIntegrationTest {
 
         mockMvc.perform(get("/api/admin/requests")
                         .param("status", "CONFIRMED")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(0));
+    }
+
+    @Test
+    void getRequests_filtersByEventId_whenEventIdMatches() throws Exception {
+        String token = obtainAdminToken();
+        saveRequestForNewEvent("Marc Solé", "Polaris Open");
+
+        mockMvc.perform(get("/api/admin/requests")
+                        .param("eventId", seededEvent.getId().toString())
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].athleteName").value("Laia Puig"));
+    }
+
+    @Test
+    void getRequests_returnsEmpty_whenEventIdDoesNotMatch() throws Exception {
+        String token = obtainAdminToken();
+
+        mockMvc.perform(get("/api/admin/requests")
+                        .param("eventId", "999999")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(0));
