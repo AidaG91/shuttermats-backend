@@ -73,6 +73,10 @@ class AdminRequestsIntegrationTest {
         coverageRequestRepository.save(request);
     }
 
+    private CoverageRequest firstSavedRequest() {
+        return coverageRequestRepository.findAll().get(0);
+    }
+
     private String obtainAdminToken() throws Exception {
         Map<String, String> body = Map.of("username", adminUsername, "password", "ShutterMats2026!");
 
@@ -122,5 +126,33 @@ class AdminRequestsIntegrationTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content.length()").value(0));
+    }
+
+    @Test
+    void getRequest_returns200AndRequest_withValidIdAndToken() throws Exception {
+        String token = obtainAdminToken();
+        Long id = firstSavedRequest().getId();
+
+        mockMvc.perform(get("/api/admin/requests/" + id)
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.athleteName").value("Laia Puig"));
+    }
+
+    @Test
+    void getRequest_returns404_whenIdDoesNotExist() throws Exception {
+        String token = obtainAdminToken();
+
+        mockMvc.perform(get("/api/admin/requests/999999")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getRequest_isRejected_withoutToken() throws Exception {
+        Long id = firstSavedRequest().getId();
+
+        mockMvc.perform(get("/api/admin/requests/" + id))
+                .andExpect(status().is4xxClientError());
     }
 }

@@ -7,6 +7,7 @@ import ShutterMats.Backend.entity.CoverageExtra;
 import ShutterMats.Backend.entity.CoverageRequest;
 import ShutterMats.Backend.entity.Event;
 import ShutterMats.Backend.exception.CoverageExtraNotFoundException;
+import ShutterMats.Backend.exception.CoverageRequestNotFoundException;
 import ShutterMats.Backend.exception.EventNotFoundException;
 import ShutterMats.Backend.mapper.CoverageRequestMapper;
 import ShutterMats.Backend.repository.CoverageExtraRepository;
@@ -61,6 +62,14 @@ public class CoverageRequestServiceImpl implements CoverageRequestService {
 
         return coverageRequestRepository.findAll(spec, pageable)
                 .map(coverageRequestMapper::toResponseDTO);
+    }
+
+    @Override
+    public CoverageRequestResponseDTO findById(Long id) {
+        CoverageRequest request = coverageRequestRepository.findById(id)
+                .orElseThrow(() -> new CoverageRequestNotFoundException(id));
+
+        return coverageRequestMapper.toResponseDTO(request);
     }
 
     private Set<CoverageExtra> resolveExtras(CoverageInfoDTO coverage) {

@@ -17,6 +17,7 @@ import ShutterMats.Backend.entity.enums.BeltCategory;
 import ShutterMats.Backend.entity.enums.CompetitionModality;
 import ShutterMats.Backend.entity.enums.Division;
 import ShutterMats.Backend.entity.enums.RequestStatus;
+import ShutterMats.Backend.exception.CoverageRequestNotFoundException;
 import ShutterMats.Backend.mapper.CoverageRequestMapper;
 import ShutterMats.Backend.repository.CoverageExtraRepository;
 import ShutterMats.Backend.repository.CoverageRequestRepository;
@@ -38,6 +39,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -127,5 +129,33 @@ class CoverageRequestServiceImplTest {
 
         assertEquals(1, result.getTotalElements());
         assertEquals(dto, result.getContent().get(0));
+    }
+
+    @Test
+    void findById_returnsMappedDTO_whenRequestExists() {
+        CoverageRequest entity = new CoverageRequest();
+        entity.setId(1L);
+        entity.setStatus(RequestStatus.PENDING);
+
+        CoverageRequestResponseDTO dto = new CoverageRequestResponseDTO(
+                1L, RequestStatus.PENDING, "Laia Puig", "laia@example.com",
+                null, Division.ADULT, CompetitionModality.BOTH, BeltCategory.BLUE, "Pluma",
+                List.of(), null
+        );
+
+        when(coverageRequestRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(coverageRequestMapper.toResponseDTO(entity)).thenReturn(dto);
+
+        CoverageRequestResponseDTO result = coverageRequestService.findById(1L);
+
+        assertEquals(dto, result);
+    }
+
+    @Test
+    void findById_throwsNotFound_whenRequestDoesNotExist() {
+        when(coverageRequestRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(CoverageRequestNotFoundException.class,
+                () -> coverageRequestService.findById(99L));
     }
 }
