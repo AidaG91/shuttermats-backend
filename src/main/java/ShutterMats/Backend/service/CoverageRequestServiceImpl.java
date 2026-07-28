@@ -12,6 +12,10 @@ import ShutterMats.Backend.mapper.CoverageRequestMapper;
 import ShutterMats.Backend.repository.CoverageExtraRepository;
 import ShutterMats.Backend.repository.CoverageRequestRepository;
 import ShutterMats.Backend.repository.EventRepository;
+import ShutterMats.Backend.repository.specifications.CoverageRequestSpecifications;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -47,6 +51,16 @@ public class CoverageRequestServiceImpl implements CoverageRequestService {
         CoverageRequest saved = coverageRequestRepository.save(request);
 
         return coverageRequestMapper.toResponseDTO(saved);
+    }
+
+    @Override
+    public Page<CoverageRequestResponseDTO> findAll(String status, Pageable pageable) {
+        Specification<CoverageRequest> spec = Specification.allOf(
+                CoverageRequestSpecifications.hasStatus(status)
+        );
+
+        return coverageRequestRepository.findAll(spec, pageable)
+                .map(coverageRequestMapper::toResponseDTO);
     }
 
     private Set<CoverageExtra> resolveExtras(CoverageInfoDTO coverage) {
