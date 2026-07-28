@@ -9,34 +9,29 @@ INSERT INTO events (name, date, location, image_url, description, created_at, up
      'Torneo de grappling gi y no-gi en Torredembarra, con divisiones para todos los niveles y un ambiente muy familiar en la costa de Tarragona.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-    ('Vinyols Challenge Fall 2025', '2025-11-08', 'Vinyols i els Arcs, Tarragona',
-     '/images/events/vinyols-challenge-fall-2025.jpg',
-     'Edición de otoño del Vinyols Challenge, uno de los torneos de referencia en el Camp de Tarragona, con categorías desde infantil hasta absoluto.',
-     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-
-    ('IBJJF Master European Championship 2026', '2026-04-25', 'Barcelona',
-     '/images/events/ibjjf-master-european-2026.jpg',
-     'Campeonato Europeo Máster de la IBJJF celebrado en el Centre Esportiu Municipal Olímpics de la Vall d''Hebron, con competidores de toda Europa.',
-     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-
     ('Vinyols Challenge Spring 2026', '2026-05-02', 'Vinyols i els Arcs, Tarragona',
      '/images/events/vinyols-challenge-spring-2026.jpg',
      'Edición de primavera del Vinyols Challenge, con formato gi y no-gi y divisiones desde los 4 años hasta veteranos.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-    ('Polaris Barcelona', '2026-08-22', 'Barcelona',
+    ('Polaris Open', '2026-08-29', 'Sabadell, Barcelona',
      '/images/events/polaris-barcelona-2026.jpg',
-     'Polaris Pro Grappling llega a Barcelona con superfights de nivel profesional y algunos de los mejores grapplers de Europa sobre el tatami.',
+     'Polaris Open llega a Sabadell con superfights de nivel profesional y algunos de los mejores grapplers de Europa sobre el tatami.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-    ('Penedès Challenge', '2026-09-13', 'Vilafranca del Penedès, Barcelona',
+    ('Cambrils Beach Challenge', '2026-09-20', 'Cambrils, Tarragona',
+     '/images/events/cambrils-beach-challenge-2026.png',
+     'Torneo de grappling en la playa de Cambrils, con formato gi y no-gi y un ambiente único junto al mar en la Costa Daurada.',
+     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+
+    ('Penedès Challenge', '2026-10-10', 'Bellvei, Tarragona',
      '/images/events/penedes-challenge-2026.jpg',
-     'Torneo de grappling del Penedès, con divisiones gi y no-gi para todas las edades y niveles en un entorno cercano y competitivo.',
+     'Torneo de grappling del Penedès celebrado en Bellvei, con divisiones gi y no-gi para todas las edades y niveles en un entorno cercano y competitivo.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 
-    ('Torredembarra Challenge Fall 2026', '2026-11-14', 'Torredembarra, Tarragona',
-     '/images/events/torredembarra-challenge-fall-2026.jpg',
-     'Nueva edición del Torredembarra Challenge, cerrando el año de competición en la costa de Tarragona con gi y no-gi.',
+    ('Vinyols Challenge Fall', '2026-11-14', 'Vinyols i els Arcs, Tarragona',
+     '/images/events/vinyols-challenge-fall-2026.png',
+     'Edición de otoño del Vinyols Challenge, cerrando el año de competición en el Camp de Tarragona con gi y no-gi.',
      CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
 ON CONFLICT (name, date) DO NOTHING;
 

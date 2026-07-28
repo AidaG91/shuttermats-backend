@@ -11,6 +11,7 @@ public record CategoryInfoDTO(
         @Size(max = 50, message = "El peso no puede superar los 50 caracteres")
         String weight,
 
+        @NotNull(message = "El cinturón es obligatorio")
         BeltCategory belt,
 
         @NotNull(message = "La división es obligatoria")
