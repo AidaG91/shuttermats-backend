@@ -7,11 +7,16 @@ import ShutterMats.Backend.entity.CoverageExtra;
 import ShutterMats.Backend.entity.CoverageRequest;
 import ShutterMats.Backend.entity.Event;
 import ShutterMats.Backend.exception.CoverageExtraNotFoundException;
+import ShutterMats.Backend.exception.CoverageRequestNotFoundException;
 import ShutterMats.Backend.exception.EventNotFoundException;
 import ShutterMats.Backend.mapper.CoverageRequestMapper;
 import ShutterMats.Backend.repository.CoverageExtraRepository;
 import ShutterMats.Backend.repository.CoverageRequestRepository;
 import ShutterMats.Backend.repository.EventRepository;
+import ShutterMats.Backend.repository.specifications.CoverageRequestSpecifications;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -47,6 +52,25 @@ public class CoverageRequestServiceImpl implements CoverageRequestService {
         CoverageRequest saved = coverageRequestRepository.save(request);
 
         return coverageRequestMapper.toResponseDTO(saved);
+    }
+
+    @Override
+    public Page<CoverageRequestResponseDTO> findAll(String status, Long eventId, Pageable pageable) {
+        Specification<CoverageRequest> spec = Specification.allOf(
+                CoverageRequestSpecifications.hasStatus(status),
+                CoverageRequestSpecifications.hasEventId(eventId)
+        );
+
+        return coverageRequestRepository.findAll(spec, pageable)
+                .map(coverageRequestMapper::toResponseDTO);
+    }
+
+    @Override
+    public CoverageRequestResponseDTO findById(Long id) {
+        CoverageRequest request = coverageRequestRepository.findById(id)
+                .orElseThrow(() -> new CoverageRequestNotFoundException(id));
+
+        return coverageRequestMapper.toResponseDTO(request);
     }
 
     private Set<CoverageExtra> resolveExtras(CoverageInfoDTO coverage) {
