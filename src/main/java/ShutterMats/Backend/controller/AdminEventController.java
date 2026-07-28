@@ -1,0 +1,83 @@
+package ShutterMats.Backend.controller;
+
+import ShutterMats.Backend.dto.request.EventRequestDTO;
+import ShutterMats.Backend.dto.response.EventResponseDTO;
+import ShutterMats.Backend.service.EventService;
+import ShutterMats.Backend.service.ImageStorageService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+/**
+ * CRUD de eventos para el admin. Bajo /api/admin/**, protegido por
+ * SecurityConfig (hasRole ADMIN) - la cadena de filtros ya lo bloquea,
+ * no hace falta @PreAuthorize aqui (mismo patron que AdminRequestController).
+ *
+ * Se usa multipart/form-data para poder subir una imagen junto con los
+ * datos del evento en la misma peticion: la parte "event" lleva el JSON
+ * (EventRequestDTO) y la parte "image" es opcional.
+ */
+@RestController
+@RequestMapping("/api/admin/events")
+@Validated
+public class AdminEventController {
+
+    private final EventService eventService;
+    private final ImageStorageService imageStorageService;
+
+    public AdminEventController(EventService eventService, ImageStorageService imageStorageService) {
+        this.eventService = eventService;
+        this.imageStorageService = imageStorageService;
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public EventResponseDTO createEvent(
+            @RequestPart("event") @Valid EventRequestDTO dto,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
+        EventRequestDTO withImage = resolveImage(dto, image, null);
+        return eventService.create(withImage);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public EventResponseDTO updateEvent(
+            @PathVariable @Positive Long id,
+            @RequestPart("event") @Valid EventRequestDTO dto,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
+        String currentImageUrl = eventService.findById(id).imageUrl();
+        EventRequestDTO withImage = resolveImage(dto, image, currentImageUrl);
+        return eventService.update(id, withImage);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteEvent(@PathVariable @Positive Long id) {
+        eventService.delete(id);
+    }
+
+    /**
+     * Resuelve que imageUrl se persiste, con 3 casos:
+     * - Llega un archivo -> se guarda y su URL gana siempre.
+     * - dto.imageUrl() es null -> el campo no se ha tocado, se conserva la imagen actual.
+     * - dto.imageUrl() es "" (String vacio explicito) -> se quita la imagen.
+     */
+    private EventRequestDTO resolveImage(EventRequestDTO dto, MultipartFile image, String currentImageUrl) {
+        String imageUrl;
+        if (image != null && !image.isEmpty()) {
+            imageUrl = imageStorageService.store(image);
+        } else if (dto.imageUrl() == null) {
+            imageUrl = currentImageUrl;
+        } else {
+            imageUrl = StringUtils.hasText(dto.imageUrl()) ? dto.imageUrl() : null;
+        }
+
+        return new EventRequestDTO(dto.name(), dto.date(), dto.location(), imageUrl, dto.description());
+    }
+}
