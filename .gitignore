@@ -44,3 +44,6 @@ spring.log
 # Build
 bin/
 out/
+
+# Imagenes subidas por el admin (almacenamiento local, no versionar)
+/uploads/

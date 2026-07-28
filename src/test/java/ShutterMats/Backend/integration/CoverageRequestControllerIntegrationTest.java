@@ -12,6 +12,7 @@ import ShutterMats.Backend.entity.Event;
 import ShutterMats.Backend.entity.enums.BeltCategory;
 import ShutterMats.Backend.entity.enums.CompetitionModality;
 import ShutterMats.Backend.entity.enums.Division;
+import ShutterMats.Backend.repository.CoverageRequestRepository;
 import ShutterMats.Backend.repository.EventRepository;
 import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,12 +40,21 @@ public class CoverageRequestControllerIntegrationTest {
     private EventRepository eventRepository;
 
     @Autowired
+    private CoverageRequestRepository coverageRequestRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     private Event seededEvent;
 
     @BeforeEach
     void setup() {
+        // Esta clase crea CoverageRequest reales via la API (createRequest_returns201...),
+        // asi que hay que limpiar antes de tocar events o rompe la FK con la
+        // siguiente clase de test que comparta el mismo H2 en memoria.
+        coverageRequestRepository.deleteAll();
+        eventRepository.deleteAll();
+
         seededEvent = eventRepository.save(Event.builder()
                 .name("Open BJJ")
                 .date(LocalDate.now())
