@@ -6,11 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
-/**
- * UserDetails para el admin unico configurado por variables de entorno
- * (no hay tabla Admin en BD - ver KAN-78/79/80). Cuando exista Athlete
- * como entidad real, tendra su propio UserDetails respaldado por JPA.
- */
 public class AdminUserDetails implements UserDetails {
 
     private final String username;

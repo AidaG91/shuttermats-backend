@@ -24,11 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Filtros activos (no addFilters = false): igual que AdminRequestsIntegrationTest,
- * necesitamos que el JwtAuthorizationFilter actue de verdad para probar que
- * /api/admin/events exige un token admin valido.
- */
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class AdminEventControllerIntegrationTest {
@@ -52,8 +48,6 @@ class AdminEventControllerIntegrationTest {
 
     @BeforeEach
     void setup() {
-        // Ver EventControllerIntegrationTest: limpiar CoverageRequest antes de
-        // events evita romper la FK si otra clase dejo alguna colgando.
         coverageRequestRepository.deleteAll();
         eventRepository.deleteAll();
 

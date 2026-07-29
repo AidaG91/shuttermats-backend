@@ -19,14 +19,6 @@ import tools.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Filtro de login estilo clase (JWTAuthentication del ejemplo de
- * femcoders): intercepta el POST de login directamente, sin pasar por un
- * @RestController. La diferencia respecto al ejemplo: aqui devolvemos el
- * token en el body como JSON (no en la cabecera Authorization de la
- * respuesta), para mantener el mismo formato que el resto de la API y no
- * tener que reescribir el httpClient del frontend para leer cabeceras.
- */
 public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;

@@ -28,11 +28,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Filtros activos (no addFilters = false): necesitamos que el
- * JwtAuthorizationFilter actue de verdad para probar que /api/admin/requests
- * exige un token admin valido.
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 class AdminRequestsIntegrationTest {

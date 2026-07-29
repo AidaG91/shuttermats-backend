@@ -13,15 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * CRUD de eventos para el admin. Bajo /api/admin/**, protegido por
- * SecurityConfig (hasRole ADMIN) - la cadena de filtros ya lo bloquea,
- * no hace falta @PreAuthorize aqui (mismo patron que AdminRequestController).
- *
- * Se usa multipart/form-data para poder subir una imagen junto con los
- * datos del evento en la misma peticion: la parte "event" lleva el JSON
- * (EventRequestDTO) y la parte "image" es opcional.
- */
+// PRIVATE (ADMIN) CRUD OF EVENTS
 @RestController
 @RequestMapping("/api/admin/events")
 @Validated
@@ -62,13 +54,7 @@ public class AdminEventController {
         eventService.delete(id);
     }
 
-    /**
-     * Resuelve que imageUrl se persiste, con 3 casos:
-     * - Llega un archivo -> se guarda y su URL gana siempre.
-     * - dto.imageUrl() es null -> el campo no se ha tocado, se conserva la imagen actual.
-     * - dto.imageUrl() es "" (String vacio explicito) -> se quita la imagen.
-     */
-    private EventRequestDTO resolveImage(EventRequestDTO dto, MultipartFile image, String currentImageUrl) {
+     private EventRequestDTO resolveImage(EventRequestDTO dto, MultipartFile image, String currentImageUrl) {
         String imageUrl;
         if (image != null && !image.isEmpty()) {
             imageUrl = imageStorageService.store(image);

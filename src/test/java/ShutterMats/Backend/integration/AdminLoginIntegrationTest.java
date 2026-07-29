@@ -64,10 +64,7 @@ class AdminLoginIntegrationTest {
 
     @Test
     void protectedAdminRoute_isRejected_withoutToken() throws Exception {
-        // No hay controller montado bajo /api/admin/** todavia aparte del
-        // login, pero la cadena de seguridad rechaza antes de llegar a
-        // resolver la ruta, asi que sirve igual para probar la barrera.
-        mockMvc.perform(get("/api/admin/anything"))
+             mockMvc.perform(get("/api/admin/anything"))
                 .andExpect(status().is4xxClientError());
     }
 }

@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Endpoints publicos de solo lectura. La creacion/edicion/borrado de eventos
- * vive en AdminEventController, bajo /api/admin/events (protegido por rol ADMIN).
- */
+// PUBLIC EVENT ENDPOINTS
 @RestController
 @RequestMapping("/api/events")
 @Validated

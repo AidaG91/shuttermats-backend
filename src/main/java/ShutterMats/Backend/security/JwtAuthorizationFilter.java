@@ -15,15 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Equivalente a JWTAuthorization del ejemplo de clase, pero sin su bug:
- * alli, si no habia cabecera Authorization, se llamaba a
- * filterChain.doFilter(...) y se seguia ejecutando igual (falta un
- * "return"), lo que revienta con NullPointerException al hacer
- * header.replace(...) sobre un header null. Aqui todo el parseo del
- * token vive dentro del if, asi que sin cabecera valida simplemente no
- * se autentica y se sigue la cadena tal cual.
- */
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
