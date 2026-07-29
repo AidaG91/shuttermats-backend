@@ -63,11 +63,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
-    /**
-     * JSON malformado o valor de enum desconocido (p.ej. status="FOO" en el
-     * PATCH de estado) -> 400 en vez del 500 generico.
-     */
-    @ExceptionHandler(HttpMessageNotReadableException.class)
+   @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleMalformedBody(HttpMessageNotReadableException ex) {
         ApiError body = ApiError.of(
                 HttpStatus.BAD_REQUEST.value(),

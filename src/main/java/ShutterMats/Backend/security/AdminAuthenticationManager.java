@@ -9,13 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-/**
- * Nombrado "Admin" y no generico a proposito: cuando montemos el login de
- * Athlete, tendra su propio AthleteUserDetailsService + un manager como
- * este (dos flujos de auth separados, cada uno con su UserDetailsService
- * concreto en vez de compartir la interfaz UserDetailsService, que daria
- * un bean ambiguo con dos implementaciones).
- */
 @Component
 public class AdminAuthenticationManager implements AuthenticationManager {
 

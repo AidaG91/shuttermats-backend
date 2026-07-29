@@ -26,11 +26,6 @@ public class JwtService {
         this.expirationMs = expirationMs;
     }
 
-    /**
-     * Genera un token para cualquier tipo de usuario (admin, y mas adelante
-     * athlete) con sus roles. No es especifico de admin a proposito: cuando
-     * se monte el login de Athlete, este mismo servicio vale sin tocarlo.
-     */
     public String generateToken(String username, List<String> roles) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expirationMs);

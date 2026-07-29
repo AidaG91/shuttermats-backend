@@ -15,10 +15,6 @@ import java.time.LocalDate;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * Solo cubre GET (publico). La creacion/edicion/borrado vive ahora en
- * /api/admin/events, ver AdminEventControllerIntegrationTest.
- */
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 public class EventControllerIntegrationTest {
@@ -36,9 +32,6 @@ public class EventControllerIntegrationTest {
 
     @BeforeEach
     void setup() {
-        // Primero las CoverageRequest: si otra clase de test dejo alguna
-        // colgando (mismo H2 en memoria compartido), borrar events directamente
-        // rompe la FK. Ver tambien CoverageRequestControllerIntegrationTest.
         coverageRequestRepository.deleteAll();
         eventRepository.deleteAll();
 

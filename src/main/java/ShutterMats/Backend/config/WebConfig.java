@@ -7,11 +7,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.file.Path;
 
-/**
- * Expone el directorio de subida de imagenes como recurso estatico publico,
- * para que las imagenes de eventos subidas desde el admin sean accesibles
- * por URL (Event.imageUrl guarda una ruta relativa tipo /uploads/events/xxx.jpg).
- */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 

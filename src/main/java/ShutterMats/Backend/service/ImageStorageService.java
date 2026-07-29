@@ -15,10 +15,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * Guarda las imagenes de los eventos en disco local, bajo {app.upload.dir}/events.
- * Se sirven despues como recurso estatico en /uploads/** (ver WebConfig).
- */
 @Service
 public class ImageStorageService {
 
@@ -45,10 +41,7 @@ public class ImageStorageService {
         }
     }
 
-    /**
-     * Guarda la imagen y devuelve la URL publica relativa (para persistir en Event.imageUrl).
-     */
-    public String store(MultipartFile file) {
+       public String store(MultipartFile file) {
         validate(file);
 
         String extension = EXTENSION_BY_CONTENT_TYPE.get(file.getContentType());

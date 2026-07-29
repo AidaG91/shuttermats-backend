@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Bajo /api/admin/**, protegido por SecurityConfig (hasRole ADMIN) - no
- * hace falta @PreAuthorize aqui, la cadena de filtros ya lo bloquea.
- */
 @RestController
 @RequestMapping("/api/admin/requests")
 public class AdminRequestController {
