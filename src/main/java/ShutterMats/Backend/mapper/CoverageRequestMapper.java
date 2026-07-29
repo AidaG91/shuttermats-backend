@@ -98,7 +98,8 @@ public class CoverageRequestMapper {
                 request.getBelt(),
                 request.getWeight(),
                 extraNames,
-                request.getCreatedAt()
+                request.getCreatedAt(),
+                request.getAdminResponse()
         );
     }
 }

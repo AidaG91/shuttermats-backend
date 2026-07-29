@@ -124,6 +124,9 @@ public class CoverageRequest {
     @Column(nullable = false)
     private RequestStatus status = RequestStatus.PENDING;
 
+    @Column(length = 1000)
+    private String adminResponse;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;

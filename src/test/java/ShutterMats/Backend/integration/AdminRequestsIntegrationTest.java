@@ -21,7 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -198,6 +200,91 @@ class AdminRequestsIntegrationTest {
         Long id = firstSavedRequest().getId();
 
         mockMvc.perform(get("/api/admin/requests/" + id))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void updateStatus_returns200AndUpdatesStatusAndResponse_withValidBody() throws Exception {
+        String token = obtainAdminToken();
+        Long id = firstSavedRequest().getId();
+
+        Map<String, String> body = Map.of("status", "CONFIRMED", "adminResponse", "Todo listo, nos vemos allí");
+
+        mockMvc.perform(patch("/api/admin/requests/" + id + "/status")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("CONFIRMED"))
+                .andExpect(jsonPath("$.adminResponse").value("Todo listo, nos vemos allí"));
+
+        CoverageRequest updated = coverageRequestRepository.findById(id).orElseThrow();
+        assertEquals(RequestStatus.CONFIRMED, updated.getStatus());
+        assertEquals("Todo listo, nos vemos allí", updated.getAdminResponse());
+    }
+
+    @Test
+    void updateStatus_allowsAnyTransition_withoutAdminResponse() throws Exception {
+        String token = obtainAdminToken();
+        Long id = firstSavedRequest().getId();
+
+        Map<String, String> body = Map.of("status", "DELIVERED");
+
+        mockMvc.perform(patch("/api/admin/requests/" + id + "/status")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("DELIVERED"));
+    }
+
+    @Test
+    void updateStatus_returns400_whenStatusIsInvalid() throws Exception {
+        String token = obtainAdminToken();
+        Long id = firstSavedRequest().getId();
+
+        Map<String, String> body = Map.of("status", "NOT_A_REAL_STATUS");
+
+        mockMvc.perform(patch("/api/admin/requests/" + id + "/status")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateStatus_returns400_whenStatusIsMissing() throws Exception {
+        String token = obtainAdminToken();
+        Long id = firstSavedRequest().getId();
+
+        mockMvc.perform(patch("/api/admin/requests/" + id + "/status")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateStatus_returns404_whenIdDoesNotExist() throws Exception {
+        String token = obtainAdminToken();
+
+        Map<String, String> body = Map.of("status", "CONFIRMED");
+
+        mockMvc.perform(patch("/api/admin/requests/999999/status")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateStatus_isRejected_withoutToken() throws Exception {
+        Long id = firstSavedRequest().getId();
+        Map<String, String> body = Map.of("status", "CONFIRMED");
+
+        mockMvc.perform(patch("/api/admin/requests/" + id + "/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
                 .andExpect(status().is4xxClientError());
     }
 }
