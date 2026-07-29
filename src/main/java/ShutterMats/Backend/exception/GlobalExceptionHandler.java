@@ -3,6 +3,7 @@ package ShutterMats.Backend.exception;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -59,6 +60,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiError> handleConstraintViolation(ConstraintViolationException ex) {
         ApiError body = ApiError.of(HttpStatus.BAD_REQUEST.value(), "Bad Request", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    /**
+     * JSON malformado o valor de enum desconocido (p.ej. status="FOO" en el
+     * PATCH de estado) -> 400 en vez del 500 generico.
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleMalformedBody(HttpMessageNotReadableException ex) {
+        ApiError body = ApiError.of(
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                "El cuerpo de la petición no es válido"
+        );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 

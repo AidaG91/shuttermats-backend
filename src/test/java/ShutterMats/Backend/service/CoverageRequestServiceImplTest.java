@@ -1,6 +1,7 @@
 package ShutterMats.Backend.service;
 
 import ShutterMats.Backend.dto.request.CoverageRequestRequestDTO;
+import ShutterMats.Backend.dto.request.UpdateRequestStatusDTO;
 import ShutterMats.Backend.dto.request.coveragerequest.AthleteInfoDTO;
 import ShutterMats.Backend.dto.request.coveragerequest.BillingInfoDTO;
 import ShutterMats.Backend.dto.request.coveragerequest.CategoryInfoDTO;
@@ -90,7 +91,7 @@ class CoverageRequestServiceImplTest {
         CoverageRequestResponseDTO expectedResponse = new CoverageRequestResponseDTO(
                 1L, RequestStatus.PENDING, "Laia Puig", "laia@example.com",
                 null, Division.ADULT, CompetitionModality.BOTH, BeltCategory.BLUE, "Pluma",
-                List.of("Calentamiento"), null
+                List.of("Calentamiento"), null, null
         );
 
         when(eventRepository.findById(1L)).thenReturn(Optional.of(event));
@@ -116,7 +117,7 @@ class CoverageRequestServiceImplTest {
         CoverageRequestResponseDTO dto = new CoverageRequestResponseDTO(
                 1L, RequestStatus.PENDING, "Laia Puig", "laia@example.com",
                 null, Division.ADULT, CompetitionModality.BOTH, BeltCategory.BLUE, "Pluma",
-                List.of(), null
+                List.of(), null, null
         );
 
         Pageable pageable = PageRequest.of(0, 10);
@@ -141,7 +142,7 @@ class CoverageRequestServiceImplTest {
         CoverageRequestResponseDTO dto = new CoverageRequestResponseDTO(
                 1L, RequestStatus.PENDING, "Laia Puig", "laia@example.com",
                 null, Division.ADULT, CompetitionModality.BOTH, BeltCategory.BLUE, "Pluma",
-                List.of(), null
+                List.of(), null, null
         );
 
         Pageable pageable = PageRequest.of(0, 10);
@@ -165,7 +166,7 @@ class CoverageRequestServiceImplTest {
         CoverageRequestResponseDTO dto = new CoverageRequestResponseDTO(
                 1L, RequestStatus.PENDING, "Laia Puig", "laia@example.com",
                 null, Division.ADULT, CompetitionModality.BOTH, BeltCategory.BLUE, "Pluma",
-                List.of(), null
+                List.of(), null, null
         );
 
         when(coverageRequestRepository.findById(1L)).thenReturn(Optional.of(entity));
@@ -182,5 +183,81 @@ class CoverageRequestServiceImplTest {
 
         assertThrows(CoverageRequestNotFoundException.class,
                 () -> coverageRequestService.findById(99L));
+    }
+
+    @Test
+    void updateStatus_updatesStatusAndResponse_whenRequestExists() {
+        CoverageRequest entity = new CoverageRequest();
+        entity.setId(1L);
+        entity.setStatus(RequestStatus.PENDING);
+
+        UpdateRequestStatusDTO statusDto = new UpdateRequestStatusDTO(RequestStatus.CONFIRMED, "Todo listo, nos vemos allí");
+
+        CoverageRequestResponseDTO expected = new CoverageRequestResponseDTO(
+                1L, RequestStatus.CONFIRMED, "Laia Puig", "laia@example.com",
+                null, Division.ADULT, CompetitionModality.BOTH, BeltCategory.BLUE, "Pluma",
+                List.of(), null, "Todo listo, nos vemos allí"
+        );
+
+        when(coverageRequestRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(coverageRequestRepository.save(entity)).thenReturn(entity);
+        when(coverageRequestMapper.toResponseDTO(entity)).thenReturn(expected);
+
+        CoverageRequestResponseDTO result = coverageRequestService.updateStatus(1L, statusDto);
+
+        assertEquals(expected, result);
+        assertEquals(RequestStatus.CONFIRMED, entity.getStatus());
+        assertEquals("Todo listo, nos vemos allí", entity.getAdminResponse());
+        verify(coverageRequestRepository).save(entity);
+    }
+
+    @Test
+    void updateStatus_keepsExistingAdminResponse_whenAdminResponseIsNull() {
+        CoverageRequest entity = new CoverageRequest();
+        entity.setId(1L);
+        entity.setStatus(RequestStatus.PENDING);
+        entity.setAdminResponse("Respuesta previa");
+
+        UpdateRequestStatusDTO statusDto = new UpdateRequestStatusDTO(RequestStatus.RECEIVED, null);
+
+        when(coverageRequestRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(coverageRequestRepository.save(entity)).thenReturn(entity);
+        when(coverageRequestMapper.toResponseDTO(entity)).thenReturn(
+                new CoverageRequestResponseDTO(1L, RequestStatus.RECEIVED, "Laia Puig", "laia@example.com",
+                        null, Division.ADULT, CompetitionModality.BOTH, BeltCategory.BLUE, "Pluma",
+                        List.of(), null, "Respuesta previa"));
+
+        coverageRequestService.updateStatus(1L, statusDto);
+
+        assertEquals("Respuesta previa", entity.getAdminResponse());
+    }
+
+    @Test
+    void updateStatus_clearsAdminResponse_whenAdminResponseIsBlank() {
+        CoverageRequest entity = new CoverageRequest();
+        entity.setId(1L);
+        entity.setStatus(RequestStatus.PENDING);
+        entity.setAdminResponse("Respuesta previa");
+
+        UpdateRequestStatusDTO statusDto = new UpdateRequestStatusDTO(RequestStatus.RECEIVED, "");
+
+        when(coverageRequestRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(coverageRequestRepository.save(entity)).thenReturn(entity);
+        when(coverageRequestMapper.toResponseDTO(entity)).thenReturn(
+                new CoverageRequestResponseDTO(1L, RequestStatus.RECEIVED, "Laia Puig", "laia@example.com",
+                        null, Division.ADULT, CompetitionModality.BOTH, BeltCategory.BLUE, "Pluma",
+                        List.of(), null, null));
+
+        coverageRequestService.updateStatus(1L, statusDto);
+
+        assertEquals(null, entity.getAdminResponse());
+    }
+
+    @Test
+    void updateStatus_throwsNotFound_whenRequestDoesNotExist() {
+        when(coverageRequestRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(CoverageRequestNotFoundException.class,
+                () -> coverageRequestService.updateStatus(99L, new UpdateRequestStatusDTO(RequestStatus.CONFIRMED, null)));
     }
 }

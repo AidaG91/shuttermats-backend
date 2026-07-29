@@ -26,4 +26,9 @@ class GlobalExceptionHandlerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertEquals("Ha ocurrido un error inesperado", response.getBody().message());
     }
+
+    // handleMalformedBody se cubre con
+    // AdminRequestsIntegrationTest#updateStatus_returns400_whenStatusIsInvalid:
+    // HttpMessageNotReadableException no tiene un constructor publico simple
+    // y estable entre versiones para instanciarlo aqui a mano.
 }

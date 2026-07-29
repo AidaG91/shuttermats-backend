@@ -1,13 +1,17 @@
 package ShutterMats.Backend.controller;
 
+import ShutterMats.Backend.dto.request.UpdateRequestStatusDTO;
 import ShutterMats.Backend.dto.response.CoverageRequestResponseDTO;
 import ShutterMats.Backend.service.CoverageRequestService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,5 +42,13 @@ public class AdminRequestController {
     @GetMapping("/{id}")
     public CoverageRequestResponseDTO getRequest(@PathVariable Long id) {
         return coverageRequestService.findById(id);
+    }
+
+    @PatchMapping("/{id}/status")
+    public CoverageRequestResponseDTO updateStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateRequestStatusDTO dto
+    ) {
+        return coverageRequestService.updateStatus(id, dto);
     }
 }

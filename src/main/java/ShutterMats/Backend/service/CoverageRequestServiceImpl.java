@@ -1,6 +1,7 @@
 package ShutterMats.Backend.service;
 
 import ShutterMats.Backend.dto.request.CoverageRequestRequestDTO;
+import ShutterMats.Backend.dto.request.UpdateRequestStatusDTO;
 import ShutterMats.Backend.dto.request.coveragerequest.CoverageInfoDTO;
 import ShutterMats.Backend.dto.response.CoverageRequestResponseDTO;
 import ShutterMats.Backend.entity.CoverageExtra;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -71,6 +73,24 @@ public class CoverageRequestServiceImpl implements CoverageRequestService {
                 .orElseThrow(() -> new CoverageRequestNotFoundException(id));
 
         return coverageRequestMapper.toResponseDTO(request);
+    }
+
+    @Override
+    public CoverageRequestResponseDTO updateStatus(Long id, UpdateRequestStatusDTO dto) {
+        CoverageRequest request = coverageRequestRepository.findById(id)
+                .orElseThrow(() -> new CoverageRequestNotFoundException(id));
+
+        request.setStatus(dto.status());
+
+        // adminResponse siempre opcional (KAN-96): null -> no se toca,
+        // "" explicito -> se borra. Mismo criterio que resolveImage en
+        // AdminEventController para imageUrl.
+        if (dto.adminResponse() != null) {
+            request.setAdminResponse(StringUtils.hasText(dto.adminResponse()) ? dto.adminResponse() : null);
+        }
+
+        CoverageRequest saved = coverageRequestRepository.save(request);
+        return coverageRequestMapper.toResponseDTO(saved);
     }
 
     private Set<CoverageExtra> resolveExtras(CoverageInfoDTO coverage) {
