@@ -1,6 +1,7 @@
 package ShutterMats.Backend.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +39,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith(BEARER_PREFIX)) {
             String token = header.substring(BEARER_PREFIX.length());
 
-            if (jwtService.isValid(token)) {
+            try {
                 Claims claims = jwtService.parseClaims(token);
                 String username = claims.getSubject();
                 List<String> roles = jwtService.getRoles(claims);
@@ -50,6 +51,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 var authentication =
                         new UsernamePasswordAuthenticationToken(username, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (JwtException | IllegalArgumentException ignored) {
+                // Token inválido o expirado: la petición sigue sin autenticar.
             }
         }
 

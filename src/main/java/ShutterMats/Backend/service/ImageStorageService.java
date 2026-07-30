@@ -41,7 +41,7 @@ public class ImageStorageService {
         }
     }
 
-       public String store(MultipartFile file) {
+    public String store(MultipartFile file) {
         validate(file);
 
         String extension = EXTENSION_BY_CONTENT_TYPE.get(file.getContentType());
