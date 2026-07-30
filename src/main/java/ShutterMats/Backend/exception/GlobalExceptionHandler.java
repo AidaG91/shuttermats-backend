@@ -15,20 +15,12 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(EventNotFoundException.class)
-    public ResponseEntity<ApiError> handleNotFound(EventNotFoundException ex) {
-        ApiError body = ApiError.of(HttpStatus.NOT_FOUND.value(), "Not Found", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-    }
-
-    @ExceptionHandler(CoverageExtraNotFoundException.class)
-    public ResponseEntity<ApiError> handleNotFound(CoverageExtraNotFoundException ex) {
-        ApiError body = ApiError.of(HttpStatus.NOT_FOUND.value(), "Not Found", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-    }
-
-    @ExceptionHandler(CoverageRequestNotFoundException.class)
-    public ResponseEntity<ApiError> handleNotFound(CoverageRequestNotFoundException ex) {
+    @ExceptionHandler({
+            EventNotFoundException.class,
+            CoverageExtraNotFoundException.class,
+            CoverageRequestNotFoundException.class
+    })
+    public ResponseEntity<ApiError> handleNotFound(RuntimeException ex) {
         ApiError body = ApiError.of(HttpStatus.NOT_FOUND.value(), "Not Found", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
@@ -63,7 +55,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
-   @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleMalformedBody(HttpMessageNotReadableException ex) {
         ApiError body = ApiError.of(
                 HttpStatus.BAD_REQUEST.value(),

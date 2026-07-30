@@ -10,10 +10,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-// PRIVATE (ADMIN) CRUD OF EVENTS
 @RestController
 @RequestMapping("/api/admin/events")
 @Validated
@@ -54,7 +60,7 @@ public class AdminEventController {
         eventService.delete(id);
     }
 
-     private EventRequestDTO resolveImage(EventRequestDTO dto, MultipartFile image, String currentImageUrl) {
+    private EventRequestDTO resolveImage(EventRequestDTO dto, MultipartFile image, String currentImageUrl) {
         String imageUrl;
         if (image != null && !image.isEmpty()) {
             imageUrl = imageStorageService.store(image);

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EventMapper {
 
-    public EventResponseDTO toResponseDTO (Event event){
+    public EventResponseDTO toResponseDTO(Event event) {
         return new EventResponseDTO(
                 event.getId(),
                 event.getName(),
@@ -21,11 +21,7 @@ public class EventMapper {
 
     public Event toEntity(EventRequestDTO dto) {
         Event event = new Event();
-        event.setName(dto.name());
-        event.setDate(dto.date());
-        event.setLocation(dto.location());
-        event.setImageUrl(dto.imageUrl());
-        event.setDescription(dto.description());
+        updateEntity(event, dto);
         return event;
     }
 
