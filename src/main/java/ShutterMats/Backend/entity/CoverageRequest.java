@@ -53,11 +53,6 @@ public class CoverageRequest {
 
     private String athleteCountry;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
-
     private String organizer;
 
     @Column(length = 500)
@@ -84,14 +79,6 @@ public class CoverageRequest {
     private String smoothcompProfileLink;
 
     private String estimatedFirstFightTime;
-
-    @ManyToMany
-    @JoinTable(
-            name = "coverage_request_extras",
-            joinColumns = @JoinColumn(name = "coverage_request_id"),
-            inverseJoinColumns = @JoinColumn(name = "coverage_extra_id")
-    )
-    private Set<CoverageExtra> extras = new HashSet<>();
 
     @Column(length = 1000)
     private String photoPreferences;
@@ -133,4 +120,17 @@ public class CoverageRequest {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
+
+    @ManyToMany
+    @JoinTable(
+            name = "coverage_request_extras",
+            joinColumns = @JoinColumn(name = "coverage_request_id"),
+            inverseJoinColumns = @JoinColumn(name = "coverage_extra_id")
+    )
+    private Set<CoverageExtra> extras = new HashSet<>();
 }
