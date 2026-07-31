@@ -43,8 +43,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventResponseDTO findById(Long id) {
-        Event event = eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
-        return eventMapper.toResponseDTO(event);
+        return eventMapper.toResponseDTO(getEntityById(id));
     }
 
     @Override
@@ -71,5 +70,10 @@ public class EventServiceImpl implements EventService {
             throw new EventNotFoundException(id);
         }
         eventRepository.deleteById(id);
+    }
+
+    @Override
+    public Event getEntityById(Long id) {
+        return eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
     }
 }

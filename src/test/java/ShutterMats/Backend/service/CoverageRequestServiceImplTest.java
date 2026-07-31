@@ -20,9 +20,7 @@ import ShutterMats.Backend.entity.enums.Division;
 import ShutterMats.Backend.entity.enums.RequestStatus;
 import ShutterMats.Backend.exception.CoverageRequestNotFoundException;
 import ShutterMats.Backend.mapper.CoverageRequestMapper;
-import ShutterMats.Backend.repository.CoverageExtraRepository;
 import ShutterMats.Backend.repository.CoverageRequestRepository;
-import ShutterMats.Backend.repository.EventRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -53,10 +51,10 @@ class CoverageRequestServiceImplTest {
     private CoverageRequestRepository coverageRequestRepository;
 
     @Mock
-    private EventRepository eventRepository;
+    private EventService eventService;
 
     @Mock
-    private CoverageExtraRepository coverageExtraRepository;
+    private CoverageExtraService coverageExtraService;
 
     @Mock
     private CoverageRequestMapper coverageRequestMapper;
@@ -94,8 +92,8 @@ class CoverageRequestServiceImplTest {
                 List.of("Calentamiento"), null, null
         );
 
-        when(eventRepository.findById(1L)).thenReturn(Optional.of(event));
-        when(coverageExtraRepository.findAllById(List.of(1L))).thenReturn(List.of(warmup));
+        when(eventService.getEntityById(1L)).thenReturn(event);
+        when(coverageExtraService.resolveByIds(List.of(1L))).thenReturn(Set.of(warmup));
         when(coverageRequestMapper.toEntity(dto, event, Set.of(warmup))).thenReturn(entityToSave);
         when(coverageRequestRepository.save(entityToSave)).thenReturn(savedEntity);
         when(coverageRequestMapper.toResponseDTO(savedEntity)).thenReturn(expectedResponse);
