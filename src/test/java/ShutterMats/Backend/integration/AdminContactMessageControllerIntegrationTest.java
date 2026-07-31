@@ -159,4 +159,55 @@ class AdminContactMessageControllerIntegrationTest {
         mockMvc.perform(patch("/api/admin/contact-messages/" + seededMessage.getId() + "/read"))
                 .andExpect(status().is4xxClientError());
     }
+
+    @Test
+    void saveResponse_returns200AndSavesResponseAndMarksAsRead_withValidToken() throws Exception {
+        String token = obtainAdminToken();
+        Map<String, String> body = Map.of("adminResponse", "Respondido por email el 31/07.");
+
+        mockMvc.perform(patch("/api/admin/contact-messages/" + seededMessage.getId() + "/response")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.adminResponse").value("Respondido por email el 31/07."))
+                .andExpect(jsonPath("$.read").value(true));
+
+        ContactMessage updated = contactMessageRepository.findById(seededMessage.getId()).orElseThrow();
+        assertTrue(updated.getRead());
+    }
+
+    @Test
+    void saveResponse_returns400_whenResponseIsBlank() throws Exception {
+        String token = obtainAdminToken();
+        Map<String, String> body = Map.of("adminResponse", "");
+
+        mockMvc.perform(patch("/api/admin/contact-messages/" + seededMessage.getId() + "/response")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void saveResponse_returns404_whenIdDoesNotExist() throws Exception {
+        String token = obtainAdminToken();
+        Map<String, String> body = Map.of("adminResponse", "Respondido por email.");
+
+        mockMvc.perform(patch("/api/admin/contact-messages/999999/response")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void saveResponse_isRejected_withoutToken() throws Exception {
+        Map<String, String> body = Map.of("adminResponse", "Respondido por email.");
+
+        mockMvc.perform(patch("/api/admin/contact-messages/" + seededMessage.getId() + "/response")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().is4xxClientError());
+    }
 }
