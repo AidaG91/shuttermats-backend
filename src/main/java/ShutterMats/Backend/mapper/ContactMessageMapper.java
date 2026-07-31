@@ -29,6 +29,7 @@ public class ContactMessageMapper {
                 contactMessage.getSubject(),
                 contactMessage.getMessage(),
                 contactMessage.getRead(),
+                contactMessage.getAdminResponse(),
                 contactMessage.getCreatedAt()
         );
     }

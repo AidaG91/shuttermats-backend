@@ -1,6 +1,7 @@
 package ShutterMats.Backend.service;
 
 import ShutterMats.Backend.dto.request.ContactMessageRequestDTO;
+import ShutterMats.Backend.dto.request.UpdateContactMessageResponseDTO;
 import ShutterMats.Backend.dto.response.ContactMessageResponseDTO;
 import ShutterMats.Backend.entity.ContactMessage;
 import ShutterMats.Backend.exception.ContactMessageNotFoundException;
@@ -54,6 +55,19 @@ public class ContactMessageServiceImpl implements ContactMessageService {
         ContactMessage contactMessage = contactMessageRepository.findById(id)
                 .orElseThrow(() -> new ContactMessageNotFoundException(id));
 
+        contactMessage.setRead(true);
+        ContactMessage saved = contactMessageRepository.save(contactMessage);
+
+        return contactMessageMapper.toResponseDTO(saved);
+    }
+
+    @Override
+    public ContactMessageResponseDTO saveResponse(Long id, UpdateContactMessageResponseDTO dto) {
+        ContactMessage contactMessage = contactMessageRepository.findById(id)
+                .orElseThrow(() -> new ContactMessageNotFoundException(id));
+
+        // Guardar una respuesta implica que el mensaje ya se ha gestionado.
+        contactMessage.setAdminResponse(dto.adminResponse());
         contactMessage.setRead(true);
         ContactMessage saved = contactMessageRepository.save(contactMessage);
 

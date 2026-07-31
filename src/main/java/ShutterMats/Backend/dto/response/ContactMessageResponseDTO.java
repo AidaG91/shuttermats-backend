@@ -12,6 +12,7 @@ public record ContactMessageResponseDTO(
         ContactSubject subject,
         String message,
         boolean read,
+        String adminResponse,
         LocalDateTime createdAt
 ) {
 }
