@@ -41,10 +41,10 @@ public class Event {
     @Column(nullable = false, length = 100)
     private String location;
 
-    @Column(name = "image_url", length = 500)
+    @Column(name = "image_url", nullable = true, length = 500)
     private String imageUrl;
 
-    @Column(length = 1000)
+    @Column(nullable = true, length = 1000)
     private String description;
 
     @CreationTimestamp
