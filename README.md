@@ -31,14 +31,14 @@ The domain is simpler than a typical multi-tenant SaaS on purpose: there is **on
 
 ```
 src/main/java/ShutterMats/Backend/
-├── config/          # Security (JWT filter chain, CORS) and static resource config
+├── config/          # Static resource config (serves uploaded event images)
 ├── controller/       # REST controllers (public + /admin)
 ├── dto/               # Request/response DTOs (records), including nested coverage-request DTOs
 ├── entity/            # JPA entities: Event, CoverageRequest, CoverageExtra + enums
 ├── exception/         # Custom exceptions + global exception handler
 ├── mapper/            # Entity <-> DTO mapping
 ├── repository/        # Spring Data repositories + JPA Specifications for filtering
-├── security/          # Admin UserDetailsService, AuthenticationManager, JWT login/authorization filters
+├── security/          # SecurityConfig (JWT filter chain, CORS), admin UserDetailsService, AuthenticationManager, JWT login/authorization filters
 └── service/           # Business logic
 ```
 
