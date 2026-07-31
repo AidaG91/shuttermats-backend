@@ -18,7 +18,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             EventNotFoundException.class,
             CoverageExtraNotFoundException.class,
-            CoverageRequestNotFoundException.class
+            CoverageRequestNotFoundException.class,
+            ContactMessageNotFoundException.class
     })
     public ResponseEntity<ApiError> handleNotFound(RuntimeException ex) {
         ApiError body = ApiError.of(HttpStatus.NOT_FOUND.value(), "Not Found", ex.getMessage());
