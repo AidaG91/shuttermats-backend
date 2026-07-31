@@ -1,9 +1,5 @@
-package ShutterMats.Backend.config;
+package ShutterMats.Backend.security;
 
-import ShutterMats.Backend.security.AdminAuthenticationManager;
-import ShutterMats.Backend.security.JwtAuthorizationFilter;
-import ShutterMats.Backend.security.JwtLoginFilter;
-import ShutterMats.Backend.security.JwtService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

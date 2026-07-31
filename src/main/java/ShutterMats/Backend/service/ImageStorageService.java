@@ -1,5 +1,6 @@
 package ShutterMats.Backend.service;
 
+import ShutterMats.Backend.dto.request.EventRequestDTO;
 import ShutterMats.Backend.exception.InvalidImageException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,24 @@ public class ImageStorageService {
         }
 
         return "/uploads/events/" + filename;
+    }
+
+    /**
+     * Resolves the imageUrl that should end up on the event DTO given an
+     * optional uploaded file, the incoming DTO's imageUrl (which the client
+     * may use to clear or keep the image), and the currently persisted URL.
+     */
+    public EventRequestDTO resolveEventImage(EventRequestDTO dto, MultipartFile image, String currentImageUrl) {
+        String imageUrl;
+        if (image != null && !image.isEmpty()) {
+            imageUrl = store(image);
+        } else if (dto.imageUrl() == null) {
+            imageUrl = currentImageUrl;
+        } else {
+            imageUrl = StringUtils.hasText(dto.imageUrl()) ? dto.imageUrl() : null;
+        }
+
+        return new EventRequestDTO(dto.name(), dto.date(), dto.location(), imageUrl, dto.description());
     }
 
     private void validate(MultipartFile file) {

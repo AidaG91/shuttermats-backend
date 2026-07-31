@@ -17,8 +17,7 @@ public class CoverageRequestSpecifications {
         try {
             parsed = RequestStatus.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
-            // estado desconocido -> no filtramos por status en vez de petar
-            return (root, query, cb) -> cb.conjunction();
+          return (root, query, cb) -> cb.conjunction();
         }
 
         return (root, query, cb) -> cb.equal(root.get("status"), parsed);

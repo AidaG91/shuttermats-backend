@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +38,7 @@ public class AdminEventController {
             @RequestPart("event") @Valid EventRequestDTO dto,
             @RequestPart(value = "image", required = false) MultipartFile image
     ) {
-        EventRequestDTO withImage = resolveImage(dto, image, null);
+        EventRequestDTO withImage = imageStorageService.resolveEventImage(dto, image, null);
         return eventService.create(withImage);
     }
 
@@ -50,7 +49,7 @@ public class AdminEventController {
             @RequestPart(value = "image", required = false) MultipartFile image
     ) {
         String currentImageUrl = eventService.findById(id).imageUrl();
-        EventRequestDTO withImage = resolveImage(dto, image, currentImageUrl);
+        EventRequestDTO withImage = imageStorageService.resolveEventImage(dto, image, currentImageUrl);
         return eventService.update(id, withImage);
     }
 
@@ -58,18 +57,5 @@ public class AdminEventController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEvent(@PathVariable @Positive Long id) {
         eventService.delete(id);
-    }
-
-    private EventRequestDTO resolveImage(EventRequestDTO dto, MultipartFile image, String currentImageUrl) {
-        String imageUrl;
-        if (image != null && !image.isEmpty()) {
-            imageUrl = imageStorageService.store(image);
-        } else if (dto.imageUrl() == null) {
-            imageUrl = currentImageUrl;
-        } else {
-            imageUrl = StringUtils.hasText(dto.imageUrl()) ? dto.imageUrl() : null;
-        }
-
-        return new EventRequestDTO(dto.name(), dto.date(), dto.location(), imageUrl, dto.description());
     }
 }

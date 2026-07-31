@@ -2,18 +2,13 @@ package ShutterMats.Backend.service;
 
 import ShutterMats.Backend.dto.request.CoverageRequestRequestDTO;
 import ShutterMats.Backend.dto.request.UpdateRequestStatusDTO;
-import ShutterMats.Backend.dto.request.coveragerequest.CoverageInfoDTO;
 import ShutterMats.Backend.dto.response.CoverageRequestResponseDTO;
 import ShutterMats.Backend.entity.CoverageExtra;
 import ShutterMats.Backend.entity.CoverageRequest;
 import ShutterMats.Backend.entity.Event;
-import ShutterMats.Backend.exception.CoverageExtraNotFoundException;
 import ShutterMats.Backend.exception.CoverageRequestNotFoundException;
-import ShutterMats.Backend.exception.EventNotFoundException;
 import ShutterMats.Backend.mapper.CoverageRequestMapper;
-import ShutterMats.Backend.repository.CoverageExtraRepository;
 import ShutterMats.Backend.repository.CoverageRequestRepository;
-import ShutterMats.Backend.repository.EventRepository;
 import ShutterMats.Backend.repository.specifications.CoverageRequestSpecifications;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,34 +16,32 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
 public class CoverageRequestServiceImpl implements CoverageRequestService {
 
     private final CoverageRequestRepository coverageRequestRepository;
-    private final EventRepository eventRepository;
-    private final CoverageExtraRepository coverageExtraRepository;
+    private final EventService eventService;
+    private final CoverageExtraService coverageExtraService;
     private final CoverageRequestMapper coverageRequestMapper;
 
     public CoverageRequestServiceImpl(CoverageRequestRepository coverageRequestRepository,
-                                       EventRepository eventRepository,
-                                       CoverageExtraRepository coverageExtraRepository,
+                                       EventService eventService,
+                                       CoverageExtraService coverageExtraService,
                                        CoverageRequestMapper coverageRequestMapper) {
         this.coverageRequestRepository = coverageRequestRepository;
-        this.eventRepository = eventRepository;
-        this.coverageExtraRepository = coverageExtraRepository;
+        this.eventService = eventService;
+        this.coverageExtraService = coverageExtraService;
         this.coverageRequestMapper = coverageRequestMapper;
     }
 
     @Override
     public CoverageRequestResponseDTO create(CoverageRequestRequestDTO dto) {
-        Event event = eventRepository.findById(dto.championship().eventId())
-                .orElseThrow(() -> new EventNotFoundException(dto.championship().eventId()));
+        Event event = eventService.getEntityById(dto.championship().eventId());
 
-        Set<CoverageExtra> extras = resolveExtras(dto.coverage());
+        Set<CoverageExtra> extras = coverageExtraService.resolveByIds(
+                dto.coverage() != null ? dto.coverage().extraIds() : null);
 
         CoverageRequest request = coverageRequestMapper.toEntity(dto, event, extras);
         CoverageRequest saved = coverageRequestRepository.save(request);
@@ -91,20 +84,5 @@ public class CoverageRequestServiceImpl implements CoverageRequestService {
 
         CoverageRequest saved = coverageRequestRepository.save(request);
         return coverageRequestMapper.toResponseDTO(saved);
-    }
-
-    private Set<CoverageExtra> resolveExtras(CoverageInfoDTO coverage) {
-        if (coverage == null || coverage.extraIds() == null || coverage.extraIds().isEmpty()) {
-            return new HashSet<>();
-        }
-
-        List<Long> extraIds = coverage.extraIds();
-        List<CoverageExtra> found = coverageExtraRepository.findAllById(extraIds);
-
-        if (found.size() != extraIds.size()) {
-            throw new CoverageExtraNotFoundException(extraIds);
-        }
-
-        return new HashSet<>(found);
     }
 }

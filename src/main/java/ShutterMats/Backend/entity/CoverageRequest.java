@@ -45,27 +45,29 @@ public class CoverageRequest {
     @Column(nullable = false, length = 30)
     private String athletePhone;
 
+    @Column(nullable = true)
     private String athleteInstagram;
 
+    @Column(nullable = true)
     private String athleteGym;
 
+    @Column(nullable = true)
     private String athleteCity;
 
+    @Column(nullable = true)
     private String athleteCountry;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
-
+    @Column(nullable = true)
     private String organizer;
 
-    @Column(length = 500)
+    @Column(nullable = true, length = 500)
     private String smoothcompLink;
 
+    @Column(nullable = true)
     private String weight;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = true)
     private BeltCategory belt;
 
     @NotNull
@@ -78,38 +80,37 @@ public class CoverageRequest {
     @Column(nullable = false)
     private CompetitionModality modality;
 
+    @Column(nullable = true)
     private String smoothcompDisplayName;
 
-    @Column(length = 500)
+    @Column(nullable = true, length = 500)
     private String smoothcompProfileLink;
 
+    @Column(nullable = true)
     private String estimatedFirstFightTime;
 
-    @ManyToMany
-    @JoinTable(
-            name = "coverage_request_extras",
-            joinColumns = @JoinColumn(name = "coverage_request_id"),
-            inverseJoinColumns = @JoinColumn(name = "coverage_extra_id")
-    )
-    private Set<CoverageExtra> extras = new HashSet<>();
-
-    @Column(length = 1000)
+    @Column(nullable = true, length = 1000)
     private String photoPreferences;
 
-    @Column(length = 1000)
+    @Column(nullable = true, length = 1000)
     private String specialMoments;
 
-    @Column(length = 1000)
+    @Column(nullable = true, length = 1000)
     private String additionalNotes;
 
+    @Column(nullable = true)
     private Boolean needsInvoice;
 
+    @Column(nullable = true)
     private String invoiceName;
 
+    @Column(nullable = true)
     private String invoiceTaxId;
 
+    @Column(nullable = true)
     private String invoiceAddress;
 
+    @Column(nullable = true)
     private String invoiceCountry;
 
     @NotNull
@@ -117,6 +118,7 @@ public class CoverageRequest {
     @Column(nullable = false)
     private Boolean termsAccepted;
 
+    @Column(nullable = true)
     private Boolean portfolioConsent;
 
     @NotNull
@@ -124,7 +126,7 @@ public class CoverageRequest {
     @Column(nullable = false)
     private RequestStatus status = RequestStatus.PENDING;
 
-    @Column(length = 1000)
+    @Column(nullable = true, length = 1000)
     private String adminResponse;
 
     @CreationTimestamp
@@ -133,4 +135,17 @@ public class CoverageRequest {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
+
+    @ManyToMany
+    @JoinTable(
+            name = "coverage_request_extras",
+            joinColumns = @JoinColumn(name = "coverage_request_id"),
+            inverseJoinColumns = @JoinColumn(name = "coverage_extra_id")
+    )
+    private Set<CoverageExtra> extras = new HashSet<>();
 }
