@@ -63,9 +63,9 @@ public class ContactMessage {
     @Column(nullable = false)
     private Boolean read = false;
 
-    // Nota interna de seguimiento: no se envía ningún email al remitente
-    // (eso requiere SMTP, aún pendiente). Solo queda constancia de que se
-    // respondió y qué se dijo, para que el equipo lo consulte más adelante.
+    // Internal-only note: no email is sent back to the sender. It just
+    // records that a reply happened and what was said, for the team to
+    // reference later (the admin is expected to reply directly by email).
     @Column(nullable = true, length = 2000)
     private String adminResponse;
 

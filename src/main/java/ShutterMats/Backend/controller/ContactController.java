@@ -23,6 +23,10 @@ public class ContactController {
         this.contactMessageService = contactMessageService;
     }
 
+    // TODO(security): no anti-bot protection and no rate limiting on this
+    // public endpoint -> an easy target for automated spam. Add reCAPTCHA v3
+    // (or Cloudflare Turnstile) later: token in the frontend (ContactPage.jsx)
+    // + verification here against the secret key before saving the message.
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ContactMessageResponseDTO createContactMessage(@Valid @RequestBody ContactMessageRequestDTO dto) {
