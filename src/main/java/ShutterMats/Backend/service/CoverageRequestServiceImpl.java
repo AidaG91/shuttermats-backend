@@ -75,14 +75,22 @@ public class CoverageRequestServiceImpl implements CoverageRequestService {
 
         request.setStatus(dto.status());
 
-        // adminResponse siempre opcional (KAN-96): null -> no se toca,
-        // "" explicito -> se borra. Mismo criterio que resolveImage en
-        // AdminEventController para imageUrl.
+        // adminResponse is always optional (KAN-96): null -> leave untouched,
+        // explicit "" -> clear it. Same convention as resolveImage in
+        // AdminEventController for imageUrl.
         if (dto.adminResponse() != null) {
             request.setAdminResponse(StringUtils.hasText(dto.adminResponse()) ? dto.adminResponse() : null);
         }
 
         CoverageRequest saved = coverageRequestRepository.save(request);
+
+        // TODO(coverage-requests): adminResponse is only persisted today,
+        // the athlete isn't notified through any channel. Reuse EmailService
+        // (already wired up for contact messages) to email the athlete when
+        // the status changes, ideally with per-status templates
+        // (CONFIRMED/REJECTED/...) the admin can pick/edit before sending.
+        // Right now this is just a plain textarea in the frontend
+        // (AdminRequestDetailPage).
         return coverageRequestMapper.toResponseDTO(saved);
     }
 }

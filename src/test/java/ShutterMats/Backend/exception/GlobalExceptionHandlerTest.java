@@ -27,8 +27,8 @@ class GlobalExceptionHandlerTest {
         assertEquals("Ha ocurrido un error inesperado", response.getBody().message());
     }
 
-    // handleMalformedBody se cubre con
+    // handleMalformedBody is covered by
     // AdminRequestsIntegrationTest#updateStatus_returns400_whenStatusIsInvalid:
-    // HttpMessageNotReadableException no tiene un constructor publico simple
-    // y estable entre versiones para instanciarlo aqui a mano.
+    // HttpMessageNotReadableException doesn't have a simple public
+    // constructor that's stable across versions to instantiate by hand here.
 }

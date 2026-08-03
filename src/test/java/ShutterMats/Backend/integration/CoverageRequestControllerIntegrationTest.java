@@ -49,9 +49,10 @@ public class CoverageRequestControllerIntegrationTest {
 
     @BeforeEach
     void setup() {
-        // Esta clase crea CoverageRequest reales via la API (createRequest_returns201...),
-        // asi que hay que limpiar antes de tocar events o rompe la FK con la
-        // siguiente clase de test que comparta el mismo H2 en memoria.
+        // This class creates real CoverageRequest rows via the API
+        // (createRequest_returns201...), so we must clean up before touching
+        // events or it breaks the FK for the next test class sharing this
+        // in-memory H2 instance.
         coverageRequestRepository.deleteAll();
         eventRepository.deleteAll();
 
