@@ -16,11 +16,14 @@ public class ContactMessageServiceImpl implements ContactMessageService {
 
     private final ContactMessageRepository contactMessageRepository;
     private final ContactMessageMapper contactMessageMapper;
+    private final EmailService emailService;
 
     public ContactMessageServiceImpl(ContactMessageRepository contactMessageRepository,
-                                      ContactMessageMapper contactMessageMapper) {
+                                      ContactMessageMapper contactMessageMapper,
+                                      EmailService emailService) {
         this.contactMessageRepository = contactMessageRepository;
         this.contactMessageMapper = contactMessageMapper;
+        this.emailService = emailService;
     }
 
     @Override
@@ -28,8 +31,10 @@ public class ContactMessageServiceImpl implements ContactMessageService {
         ContactMessage contactMessage = contactMessageMapper.toEntity(dto);
         ContactMessage saved = contactMessageRepository.save(contactMessage);
 
-        // El envío de la notificación por email al fotógrafo queda pendiente
-        // (requiere configurar JavaMailSender/SMTP): ver issue de seguimiento.
+        // EmailServiceImpl already guards against SMTP failures (it only
+        // logs a warning), so this can never break the contact form submit.
+        emailService.sendContactMessageNotification(saved);
+
         return contactMessageMapper.toResponseDTO(saved);
     }
 
@@ -66,7 +71,7 @@ public class ContactMessageServiceImpl implements ContactMessageService {
         ContactMessage contactMessage = contactMessageRepository.findById(id)
                 .orElseThrow(() -> new ContactMessageNotFoundException(id));
 
-        // Guardar una respuesta implica que el mensaje ya se ha gestionado.
+        // Saving a response implies the message has already been handled.
         contactMessage.setAdminResponse(dto.adminResponse());
         contactMessage.setRead(true);
         ContactMessage saved = contactMessageRepository.save(contactMessage);
