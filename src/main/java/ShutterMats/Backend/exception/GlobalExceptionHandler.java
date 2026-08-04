@@ -19,15 +19,16 @@ public class GlobalExceptionHandler {
             EventNotFoundException.class,
             CoverageExtraNotFoundException.class,
             CoverageRequestNotFoundException.class,
-            ContactMessageNotFoundException.class
+            ContactMessageNotFoundException.class,
+            PricingPlanNotFoundException.class
     })
     public ResponseEntity<ApiError> handleNotFound(RuntimeException ex) {
         ApiError body = ApiError.of(HttpStatus.NOT_FOUND.value(), "Not Found", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
-    @ExceptionHandler(InvalidImageException.class)
-    public ResponseEntity<ApiError> handleInvalidImage(InvalidImageException ex) {
+    @ExceptionHandler({InvalidImageException.class, DefaultPricingPlanException.class})
+    public ResponseEntity<ApiError> handleBadRequest(RuntimeException ex) {
         ApiError body = ApiError.of(HttpStatus.BAD_REQUEST.value(), "Bad Request", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }

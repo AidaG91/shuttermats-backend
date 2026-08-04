@@ -18,7 +18,7 @@ public record CoverageRequestResponseDTO(
         CompetitionModality modality,
         BeltCategory belt,
         String weight,
-        List<String> extras,
+        List<CoverageExtraResponseDTO> extras,
         LocalDateTime createdAt,
         String adminResponse
 ) {

@@ -15,6 +15,7 @@ import ShutterMats.Backend.entity.Event;
 import ShutterMats.Backend.entity.enums.BeltCategory;
 import ShutterMats.Backend.entity.enums.CompetitionModality;
 import ShutterMats.Backend.entity.enums.Division;
+import ShutterMats.Backend.service.PricingPlanService;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -23,10 +24,14 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 class CoverageRequestMapperTest {
 
-    private final CoverageRequestMapper mapper = new CoverageRequestMapper(new EventMapper());
+    // toEntity (the only method this class tests) never touches pricing,
+    // so the mock doesn't need any stubbing.
+    private final CoverageRequestMapper mapper =
+            new CoverageRequestMapper(new EventMapper(mock(PricingPlanService.class)));
 
     @Test
     void toEntity_mapsAllSectionsCorrectly_whenAllSectionsPresent() {

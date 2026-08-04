@@ -8,6 +8,7 @@ import ShutterMats.Backend.dto.request.coveragerequest.ChampionshipInfoDTO;
 import ShutterMats.Backend.dto.request.coveragerequest.ConfirmationsDTO;
 import ShutterMats.Backend.dto.request.coveragerequest.LocateInfoDTO;
 import ShutterMats.Backend.dto.request.coveragerequest.PreferencesDTO;
+import ShutterMats.Backend.dto.response.CoverageExtraResponseDTO;
 import ShutterMats.Backend.dto.response.CoverageRequestResponseDTO;
 import ShutterMats.Backend.entity.CoverageExtra;
 import ShutterMats.Backend.entity.CoverageRequest;
@@ -83,8 +84,8 @@ public class CoverageRequestMapper {
     }
 
     public CoverageRequestResponseDTO toResponseDTO(CoverageRequest request) {
-        List<String> extraNames = request.getExtras().stream()
-                .map(CoverageExtra::getName)
+        List<CoverageExtraResponseDTO> extras = request.getExtras().stream()
+                .map(extra -> new CoverageExtraResponseDTO(extra.getId(), extra.getName(), extra.getPrice()))
                 .toList();
 
         return new CoverageRequestResponseDTO(
@@ -97,7 +98,7 @@ public class CoverageRequestMapper {
                 request.getModality(),
                 request.getBelt(),
                 request.getWeight(),
-                extraNames,
+                extras,
                 request.getCreatedAt(),
                 request.getAdminResponse()
         );

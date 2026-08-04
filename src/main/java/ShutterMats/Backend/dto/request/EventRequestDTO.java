@@ -23,6 +23,14 @@ public record EventRequestDTO(
         String imageUrl,
 
         @Size(max = 1000, message = "La descripción no puede superar los 1000 caracteres")
-        String description
+        String description,
+
+        @Size(max = 500, message = "El enlace no puede superar los 500 caracteres")
+        String registrationUrl,
+
+        // Which pricing plan to snapshot onto this event. Required when
+        // creating an event; on update, leave null to keep the event's
+        // current price untouched (see EventServiceImpl).
+        Long pricingPlanId
 ) {
 }
