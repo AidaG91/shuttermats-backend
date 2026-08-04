@@ -73,7 +73,10 @@ public class ImageStorageService {
             imageUrl = StringUtils.hasText(dto.imageUrl()) ? dto.imageUrl() : null;
         }
 
-        return new EventRequestDTO(dto.name(), dto.date(), dto.location(), imageUrl, dto.description());
+        return new EventRequestDTO(
+                dto.name(), dto.date(), dto.location(), imageUrl, dto.description(),
+                dto.registrationUrl(), dto.pricingPlanId()
+        );
     }
 
     private void validate(MultipartFile file) {
