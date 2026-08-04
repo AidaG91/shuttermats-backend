@@ -10,6 +10,7 @@ import ShutterMats.Backend.dto.request.coveragerequest.ConfirmationsDTO;
 import ShutterMats.Backend.dto.request.coveragerequest.CoverageInfoDTO;
 import ShutterMats.Backend.dto.request.coveragerequest.LocateInfoDTO;
 import ShutterMats.Backend.dto.request.coveragerequest.PreferencesDTO;
+import ShutterMats.Backend.dto.response.CoverageExtraResponseDTO;
 import ShutterMats.Backend.dto.response.CoverageRequestResponseDTO;
 import ShutterMats.Backend.entity.CoverageExtra;
 import ShutterMats.Backend.entity.CoverageRequest;
@@ -89,7 +90,7 @@ class CoverageRequestServiceImplTest {
         CoverageRequestResponseDTO expectedResponse = new CoverageRequestResponseDTO(
                 1L, RequestStatus.PENDING, "Laia Puig", "laia@example.com",
                 null, Division.ADULT, CompetitionModality.BOTH, BeltCategory.BLUE, "Pluma",
-                List.of("Calentamiento"), null, null
+                List.of(new CoverageExtraResponseDTO(1L, "Calentamiento", null)), null, null
         );
 
         when(eventService.getEntityById(1L)).thenReturn(event);
